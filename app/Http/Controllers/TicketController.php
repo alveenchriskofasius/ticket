@@ -56,17 +56,27 @@ class TicketController extends Controller
         $ticket->fill($data);
         $ticket->user_id = auth()->id(); // Ensure the current user is the ticket owner
         $ticket->save();
-    
+      // If the request is AJAX, return a JSON response
+      if ($request->ajax()) {
         return response()->json(['message' => 'Ticket saved successfully!']);
+    }
+
+    // If it's a normal request, redirect back with a success message
+    return redirect()->route('tickets.index')->with('success', 'Ticket saved successfully!');
     }
     
     public function destroy($id)
     {
-        // Find and delete the ticket that belongs to the current user
-        $ticket = Ticket::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $ticket = Ticket::find($id);
+    
+        if (!$ticket) {
+            return response()->json(['message' => 'Ticket not found'], 404);
+        }
+    
         $ticket->delete();
-
-        // Return a JSON response for success
-        return response()->json(['message' => 'Ticket deleted successfully!']);
+    
+        return response()->json(['message' => 'Ticket deleted successfully']);
     }
+    
+
 }

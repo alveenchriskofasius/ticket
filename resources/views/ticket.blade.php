@@ -1,3 +1,5 @@
+
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -43,8 +45,34 @@
             <tr class="bg-white border-b bg-gray-800 border-gray-700">
                 <td class="px-6 py-4">{{ $ticket->name }}</td>
                 <td class="px-6 py-4">{{ $ticket->description }}</td>
-                <td class="px-6 py-4">{{ $ticket->status }}</td>
-                <td class="px-6 py-4">{{ $ticket->priority }}</td>
+    <!-- Status Badge -->
+    <td class="px-6 py-4">
+                    @php
+                        $statusClasses = [
+                            'open' => 'bg-blue-500 text-white',
+                            'in_progress' => 'bg-yellow-500 text-white',
+                            'resolved' => 'bg-green-500 text-white',
+                            'closed' => 'bg-gray-500 text-white',
+                        ];
+                    @endphp
+                    <span class="px-3 py-1 rounded-full {{ $statusClasses[$ticket->status] ?? 'bg-gray-300 text-black' }}">
+                        {{ ucfirst($ticket->status) }}
+                    </span>
+                </td>
+                
+                <!-- Priority Badge -->
+                <td class="px-6 py-4">
+                    @php
+                        $priorityClasses = [
+                            'low' => 'bg-green-200 text-green-800',
+                            'medium' => 'bg-yellow-200 text-yellow-800',
+                            'high' => 'bg-red-200 text-red-800',
+                        ];
+                    @endphp
+                    <span class="px-3 py-1 rounded-full {{ $priorityClasses[$ticket->priority] ?? 'bg-gray-300 text-black' }}">
+                        {{ ucfirst($ticket->priority) }}
+                    </span>
+                </td>
                 <td class="px-6 py-4">{{ $ticket->created_at->format('d-m-Y') }}</td>
                 <td class="px-6 py-4">
     <!-- Action buttons for view, edit, and delete -->
@@ -55,7 +83,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4" class="px-6 py-4 text-center text-gray-500">No tickets found.</td>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">No tickets found.</td>
             </tr>
         @endforelse
         </tbody>

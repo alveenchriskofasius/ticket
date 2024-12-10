@@ -23,7 +23,7 @@ window.Form = {
     FillForm: function (ticketId) {
         // You can fetch ticket data using AJAX or populate the form here
         $.ajax({
-            url: `/tickets/details/${ticketId}`, // Adjusted to match your route
+            url: `/tickets/${ticketId}`, // Adjusted to match your route
             method: 'GET',
             success: function (response) {
                 console.log(response); // Log the fetched data
@@ -48,27 +48,32 @@ window.Form = {
 window.Table = {
     Delete: function(id) {
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Get CSRF token
-
+    
         // Perform the delete action here, e.g., send an AJAX request to the server
-        fetch(`/tickets/delete/${id}`, {
+        fetch(`/tickets/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": token  // Include CSRF token here
+                "X-CSRF-TOKEN": token // Include CSRF token here
             }
         })
-        .then(response => {
-            console.log(response);
-            if (response.ok) {
-                toastr.success('Ticket deleted successfully');
-                // Optionally, close the modal after successful deletion
-                document.getElementById('popup-modal').classList.add('hidden');
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+            if (data.message) {
+                
+                // Reload the page after showing the message
+                toastr.options.onShown  = function() { window.location.reload(); }
+                // Show the success message in toastr
+                toastr.success(data.message);
+
             } else {
                 toastr.error('Failed to delete ticket');
             }
         })
         .catch(error => {
+            console.error(error);
             toastr.error('Error deleting ticket');
         });
     }
+    
 };
