@@ -15,6 +15,7 @@
                 @if(isset($ticket))
                     @method('PUT') <!-- Add PUT method for updating the ticket -->
                 @endif
+                <input type="hidden" id="id" name="id" value="{{ isset($ticket) ? $ticket->id : '' }}">
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 text-black">Name</label>
@@ -44,9 +45,9 @@
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">
                     Save
                 </button>
-                <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 bg-red-600 hover:bg-red-700 focus:ring-red-900" data-modal-toggle="crud-modal">
-                    Close
-                </button>
+                <button type="button" data-modal-hide="crud-modal" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 bg-red-600 hover:bg-red-700 focus:ring-red-900">
+        Close
+    </button>
             </form>
         </div>
     </div>

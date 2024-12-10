@@ -19,34 +19,23 @@ class TicketController extends Controller
         return view('ticket', compact('tickets'));
     }
     
-
-    /**
-     * Fetch ticket details by ID.
-     */
     public function details($id)
     {
         // Find the ticket that belongs to the current user
         $ticket = Ticket::where('id', $id)
                         ->where('user_id', auth()->id())
-                        ->firstOrFail();
-    
-        // Define the status and priority options
-        $statusOptions = ['open', 'in_progress', 'resolved', 'closed'];
-        $priorityOptions = ['low', 'medium', 'high'];
-    
+                        ->first();
+       // If the ticket is not found, return a new instance with default values
+       if (!$ticket) {
+        $ticket = new Ticket(); // Creates an empty Ticket instance
+    }
         // Return the ticket details, status options, and priority options as a JSON response
-        return response()->json([
-            'ticket' => $ticket,
-            'statusOptions' => $statusOptions,
-            'priorityOptions' => $priorityOptions,
-        ]);
+        return response()->json($ticket);
     }
     
-    /**
-     * Save (create or update) a ticket.
-     */
-    public function save(Request $request, $id = null)
+    public function save(Request $request)
     {
+    
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -54,8 +43,16 @@ class TicketController extends Controller
             'priority' => 'in:low,medium,high'
         ]);
     
-        // Create or update ticket
-        $ticket = $id ? Ticket::find($id) : new Ticket;
+        // Check if 'id' exists in the request and find the ticket or create a new one
+        if ($request->id) {
+            // If the ticket ID exists, find and update
+            $ticket = Ticket::findOrFail($request->id);
+        } else {
+            // If no ID is provided, create a new ticket
+            $ticket = new Ticket;
+        }
+    
+        // Fill the ticket with the validated data
         $ticket->fill($data);
         $ticket->user_id = auth()->id(); // Ensure the current user is the ticket owner
         $ticket->save();
@@ -63,10 +60,6 @@ class TicketController extends Controller
         return response()->json(['message' => 'Ticket saved successfully!']);
     }
     
-
-    /**
-     * Remove the specified ticket.
-     */
     public function destroy($id)
     {
         // Find and delete the ticket that belongs to the current user

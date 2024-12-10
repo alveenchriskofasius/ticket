@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                 <!-- Modal toggle -->
-<button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+<button data-modal-target="crud-modal" onclick="Form.FillForm(0)" data-modal-toggle="crud-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
   New Ticket
 </button>
                 
@@ -47,10 +47,11 @@
                 <td class="px-6 py-4">{{ $ticket->priority }}</td>
                 <td class="px-6 py-4">{{ $ticket->created_at->format('d-m-Y') }}</td>
                 <td class="px-6 py-4">
-                    <!-- Action buttons for view, edit, and delete -->
-                    <button onclick="openEditModal({{ $ticket->id }})" class="px-3 py-2 bg-blue-500 text-white rounded">Edit</button>
-                    <button onclick="deleteTicket({{ $ticket->id }})" class="px-3 py-2 bg-red-500 text-white rounded">Delete</button>
-                </td>
+    <!-- Action buttons for view, edit, and delete -->
+    <button onclick="Form.FillForm({{ $ticket->id }})" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="px-3 py-2 bg-blue-500 text-white rounded">Edit</button>
+    <button data-modal-target="popup-modal" data-id="{{ $ticket->id }}" data-modal-toggle="popup-modal" class="px-3 py-2 bg-red-500 text-white rounded">Delete</button>
+    </td>
+
             </tr>
         @empty
             <tr>
@@ -60,10 +61,10 @@
         </tbody>
     </table>
 </div>
-
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
 <x-ticket-modal></x-ticket-modal>
+<x-delete-modal></x-delete-modal>
