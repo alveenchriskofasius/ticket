@@ -2,18 +2,18 @@ $(document).ready(function () {
     // Capture the delete button click to show the modal and pass the id to the modal button
 document.querySelectorAll('[data-modal-toggle="popup-modal"]').forEach(button => {
     button.addEventListener('click', function () {
-        const ticketId = this.getAttribute('data-id');  // Get the ticket id from data-id
-        console.log(ticketId);
-        const deleteButton = document.getElementById('buttonDelete');
-        
-        // Set the ticketId as a custom attribute on the delete button in the modal
-        deleteButton.setAttribute('data-id', ticketId);
+        const ticketId = this.getAttribute('data-id'); 
+        if(!ticketId)return;
+            const deleteButton = document.getElementById('buttonDelete');
+            // Set the ticketId as a custom attribute on the delete button in the modal
+            deleteButton.setAttribute('data-id', ticketId);
     });
 });
 
 // Capture the delete action inside the modal
 document.getElementById('buttonDelete').addEventListener('click', function () {
     const ticketId = this.getAttribute('data-id');  // Retrieve the ticketId from the modal button
+    if(!ticketId)return;
     window.Table.Delete(ticketId);  // Pass the ID to your delete function
 });
 
