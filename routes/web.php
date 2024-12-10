@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,10 +11,11 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/ticket', function () {
-    return view('ticket');
-})->middleware(['auth', 'verified'])->name('ticket');
 Route::middleware('auth')->group(function () {
+    Route::get('tickets/index', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('tickets/details/{id}', [TicketController::class, 'details'])->name('tickets.details');
+    Route::post('tickets/save/{id?}', [TicketController::class, 'save'])->name('tickets.save');
+    Route::delete('tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

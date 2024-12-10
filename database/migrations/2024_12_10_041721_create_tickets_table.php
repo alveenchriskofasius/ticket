@@ -17,8 +17,13 @@ return new class extends Migration
             $table->text('description'); 
             $table->unsignedBigInteger('user_id'); // Ticket owner
 
+            // Adding the new columns
+            $table->enum('status', ['open', 'in_progress', 'resolved', 'closed'])->default('open');
+            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
+
             $table->timestamps();
-            // fk key linking user id in the user table
+            
+            // Foreign key linking user_id in the users table
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
